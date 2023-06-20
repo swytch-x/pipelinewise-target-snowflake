@@ -78,9 +78,9 @@ def column_type(schema_property):
     if 'object' in property_type or 'array' in property_type:
         col_type = 'variant'
 
-    # Every date-time JSON value is currently mapped to TIMESTAMP_NTZ
+    # Every date-time JSON value is currently mapped to TIMESTAMP_TZ
     elif property_format == 'date-time':
-        col_type = 'timestamp_ntz'
+        col_type = 'timestamp_tz'
     elif property_format == 'date':
         col_type = 'date'
     elif property_format == 'time':
@@ -759,7 +759,7 @@ class DbSync:
                # a TIMESTAMP_TZ column is already available in the target table (i.e. created by fastsync initial load)
                # We need to exclude this conversion otherwise we loose the data that is already populated
                # in the column
-               column_type(properties_schema).upper() != 'TIMESTAMP_NTZ'
+               column_type(properties_schema).upper() not in ['TIMESTAMP_NTZ', 'TIMESTAMP_TZ']
         ]
 
         for (column_name, column) in columns_to_replace:
